@@ -1,5 +1,0 @@
-# -- This is needed now so we can add the SOPS secret
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: flux-system

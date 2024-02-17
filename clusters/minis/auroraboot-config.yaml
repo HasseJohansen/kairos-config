@@ -1,0 +1,9 @@
+listen_addr: :8081
+state_dir: "/storage"
+# artifact_version: v2.5.0-k3sv1.29.0+k3s1
+# release_version: v2.5.0
+# flavor: ubuntu
+# flavor_release: 23.10
+# variant: standard
+# repository: kairos-io/kairos
+container_image: quay.io/kairos/ubuntu:23.10-standard-amd64-generic-master
