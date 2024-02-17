@@ -1,0 +1,82 @@
+#cloud-config
+
+install:
+  device: "/dev/sda"
+  auto: true
+  poweroff: true
+hostname: minis-{{ trunc 4 .MachineID }}
+users:
+- name: kairos
+  ssh_authorized_keys:
+  - github:HasseJohansen
+
+k3s:
+  enabled: true
+  args:
+  - --disable=traefik,servicelb
+
+kubevip:
+  eip: "192.168.8.8"
+
+p2p:
+  # Disabling DHT makes co-ordination to discover nodes only in the local network
+  disable_dht: true #Enabled by default
+
+  vpn:
+    create: false # defaults to true
+    use: false # defaults to true
+  # network_token is the shared secret used by the nodes to co-ordinate with p2p.
+  # Setting a network token implies auto.enable = true.
+  # To disable, just set auto.enable = false
+  network_token: <generated network token>
+
+  # Automatic cluster deployment configuration
+  auto:
+    # Enables Automatic node configuration (self-coordination)
+    # for role assignment
+    enable: true
+    # HA enables automatic HA roles assignment.
+    # A master cluster init is always required,
+    # Any additional master_node is configured as part of the
+    # HA control plane.
+    # If auto is disabled, HA has no effect.
+    ha:
+     # Enables HA control-plane
+     enable: true
+     # Number of HA additional master nodes.
+     # A master node is always required for creating the cluster and is implied.
+     # The setting below adds 2 additional master nodes, for a total of 3.
+     master_nodes: 1
+  
+bundles:
+  - targets:
+    -  run://hassejohansen/flux:latest
+
+flux:
+  env:
+    GITHUB_TOKEN: <github PAT>
+  github:
+    owner: HasseJohansen
+    repository: fleet-infra
+    path: clusters/minis
+    components-extra: image-reflector-controller,image-automation-controller
+    network-policy: "false"
+
+stages:
+  after-install-chroot:
+    - files:
+      - path: /etc/systemd/network/10-dhcp.network
+        owner: 0
+        group: 0
+        permissions: 0644
+        content: |
+          [Match]
+          Name=enp47s0
+          [Link]
+          Unmanaged=yes
+      commands:
+        - rm -f /var/lib/dbus/machine-id
+        - rm -f /etc/machine-id
+        - dbus-uuidgen --ensure
+        - systemd-machine-id-setup
+        - sed -i '/^config_url:.*$/d' /oem/90_custom.yaml
