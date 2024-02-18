@@ -1,0 +1,4 @@
+creation_rules:
+  - path_regex: .*.yaml
+    encrypted_regex: '^(GITHUB_TOKEN|network_token)$'
+    age: age1k4pr9evth7r8f6dajz6jee945582dklr72mklj9gpwcvnxkgc5asruclml

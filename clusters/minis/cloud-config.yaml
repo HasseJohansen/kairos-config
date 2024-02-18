@@ -1,82 +1,119 @@
 #cloud-config
-
 install:
-  device: "/dev/sda"
-  auto: true
-  poweroff: true
+    device: /dev/sda
+    auto: true
+    poweroff: true
 hostname: minis-{{ trunc 4 .MachineID }}
 users:
-- name: kairos
-  ssh_authorized_keys:
-  - github:HasseJohansen
-
+    - name: kairos
+      ssh_authorized_keys:
+        - github:HasseJohansen
 k3s:
-  enabled: true
-  args:
-  - --disable=traefik,servicelb
-
+    enabled: true
+    args:
+        - --disable=traefik,servicelb
 kubevip:
-  eip: "192.168.8.8"
-
+    eip: 192.168.8.8
 p2p:
-  # Disabling DHT makes co-ordination to discover nodes only in the local network
-  disable_dht: true #Enabled by default
-
-  vpn:
-    create: false # defaults to true
-    use: false # defaults to true
-  # network_token is the shared secret used by the nodes to co-ordinate with p2p.
-  # Setting a network token implies auto.enable = true.
-  # To disable, just set auto.enable = false
-  network_token: <generated network token>
-
-  # Automatic cluster deployment configuration
-  auto:
-    # Enables Automatic node configuration (self-coordination)
-    # for role assignment
-    enable: true
-    # HA enables automatic HA roles assignment.
-    # A master cluster init is always required,
-    # Any additional master_node is configured as part of the
-    # HA control plane.
-    # If auto is disabled, HA has no effect.
-    ha:
-     # Enables HA control-plane
-     enable: true
-     # Number of HA additional master nodes.
-     # A master node is always required for creating the cluster and is implied.
-     # The setting below adds 2 additional master nodes, for a total of 3.
-     master_nodes: 1
-  
+    # Disabling DHT makes co-ordination to discover nodes only in the local network
+    #Enabled by default
+    disable_dht: true
+    vpn:
+        # defaults to true
+        create: false
+        # defaults to true
+        use: false
+    # network_token is the shared secret used by the nodes to co-ordinate with p2p.
+    # Setting a network token implies auto.enable = true.
+    # To disable, just set auto.enable = false
+    network_token: ENC[AES256_GCM,data:cPtDeuctN106JlXBMkTVkWVmIp9dSmdZWBw47+BNmPNqeumRCZE+xNh8KU0KyjPK+8EJ5wS/eJ+fmDBKfGnSTDerYPuZ9faCFi0Q10ZBb3HNTgtl9tTM+zOhYl51HzpnwehJz/G5l5leu+Q6dOMbkM9SrBRprk/dzp4//gbBxM5zrzQ9CWkuq0ENn4BaMiVpGrrSmHl2Gtb1oPQ3h0v8OIyP0otKg0QzIGMZbRsLrhYA3cEi9lH9R3icBqrBMYVRAc2DNK2hJWM4jU1KQcYpF38mqHMpNBqibFBCHUQlnbIhxEXNpFx9Cap8AQbGNW01FfPh0UFtkAyTwVCOwNA+Y10jZ04Hfk1aXLCyI3nvXlAo1Zj27kP7WN1z2BqaJD1xRIP1RTQ2NpwTv3Nav2Gq97z4lB+1nH2gkHciQW87Wqiu9CLZh3KRfoT2mJBD3RAI2qKxqlIq1FMoA+RHKbKBAbYQrA1ZNtl9S1LaZAs633c3cJUyS0JsvaiNqJlooD8S2y0qhZ+uHJ7S1ziUPSmOZaA6pUzU2qX/pThis30qILKmRfCZ+uWOsFPXboOqHmS6v8LIB/86tXaqm7CHMV51nrvm2XyYs5qESSD/egsRxKGUbxG2dIo1+ezeXoeKh6pkbxzDoqdt0y5BBc3z3nmVldYScGrLcin9+bckjg==,iv:koyF6bZohTJdkCX2m7Z/brXwCAycWvo4iHQEiPBHhik=,tag:pBLtdzCd2IzAb/kfe5p0QA==,type:str]
+    # Automatic cluster deployment configuration
+    auto:
+        # Enables Automatic node configuration (self-coordination)
+        # for role assignment
+        enable: true
+        # HA enables automatic HA roles assignment.
+        # A master cluster init is always required,
+        # Any additional master_node is configured as part of the
+        # HA control plane.
+        # If auto is disabled, HA has no effect.
+        ha:
+            # Enables HA control-plane
+            enable: true
+            # Number of HA additional master nodes.
+            # A master node is always required for creating the cluster and is implied.
+            # The setting below adds 2 additional master nodes, for a total of 3.
+            master_nodes: 1
 bundles:
-  - targets:
-    -  run://hassejohansen/flux:latest
-
+    - targets:
+        - run://hassejohansen/flux:latest
 flux:
-  env:
-    GITHUB_TOKEN: <github PAT>
-  github:
-    owner: HasseJohansen
-    repository: fleet-infra
-    path: clusters/minis
-    components-extra: image-reflector-controller,image-automation-controller
-    network-policy: "false"
-
+    env:
+        GITHUB_TOKEN: ENC[AES256_GCM,data:t4f7lbwYXJH9vccnM2Y2CJlXs4XB0JKVihjUAoTEj1fGuumJBdhVpw==,iv:U3M/YTl6DVt1HcDBBvZb10y3KGdC4B9kEi8k0GTVtOI=,tag:0vq297iGQky7Wo5NlcCteQ==,type:str]
+    github:
+        owner: HasseJohansen
+        repository: fleet-infra
+        path: clusters/minis
+        components-extra: image-reflector-controller,image-automation-controller
+        network-policy: "false"
 stages:
-  after-install-chroot:
-    - files:
-      - path: /etc/systemd/network/10-dhcp.network
-        owner: 0
-        group: 0
-        permissions: 0644
-        content: |
-          [Match]
-          Name=enp47s0
-          [Link]
-          Unmanaged=yes
-      commands:
-        - rm -f /var/lib/dbus/machine-id
-        - rm -f /etc/machine-id
-        - dbus-uuidgen --ensure
-        - systemd-machine-id-setup
-        - sed -i '/^config_url:.*$/d' /oem/90_custom.yaml
+    after-install-chroot:
+        - files:
+            - path: /etc/systemd/network/10-dhcp.network
+              owner: 0
+              group: 0
+              permissions: 420
+              content: |
+                [Match]
+                Name=enp47s0
+                [Link]
+                Unmanaged=yes
+          commands:
+            - rm -f /var/lib/dbus/machine-id
+            - rm -f /etc/machine-id
+            - dbus-uuidgen --ensure
+            - systemd-machine-id-setup
+            - sed -i '/^config_url:.*$/d' /oem/90_custom.yaml
+        - name: Create data dir
+          commands:
+            - mkdir -p /data
+        - name: Format /dev/nvme0n1
+          commands:
+            - mkfs.ext4 -F /dev/nvme0n1
+    # Creates the data dir after reset inside the final system chroot, just in case it's not there
+    after-reset-chroot:
+        - !!merge <<:
+            name: Create data dir
+            commands:
+                - mkdir -p /data
+    # Creates the data dir after upgrade inside the final system chroot, just in case it's not there
+    after-upgrade-chroot:
+        - !!merge <<:
+            name: Create data dir
+            commands:
+                - mkdir -p /data
+    initramfs:
+        # Mounts the disk under the /data dir during initramfs on each boot, with RW. Extra options can be added to the mount here
+        - name: Mount /dev/nvme0n1 under /data
+          commands:
+            - mount -o rw /dev/nvme0n1 /data
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1k4pr9evth7r8f6dajz6jee945582dklr72mklj9gpwcvnxkgc5asruclml
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSByL21rN2JtUWEyZStQTGVS
+            OUxocjhCakszSVlPQlg3aUpNSjZzV0pIaEMwCmExMEJXVGdncGR2MnQ3T0ttRjlX
+            Y2hNOE5GdURGdFVTczdZSHBnMjBRRm8KLS0tICtieUllaEp2REtCcmtZbVd2N01w
+            eTd2UENQUFRKVHQ2QTR0RE43YytuTjQKbweccOrmuyAtGDmGE1fXvZCUgYFYFck5
+            9dv3vY8Eat4OG4Est0UWal3BSEazB3OomqH0Jp+lD7wJBrDe9P4k4Q==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2024-02-18T22:03:24Z"
+    mac: ENC[AES256_GCM,data:+GAnFRHn1p4alU0zJm9FGvE6SpW3qn7Z6m2UGF6VBR8Zmy7izUlmPm61OWgEqnd1wQwJ030k7Gr/u63xR9b5erY2bGS/aTLfUWhNEUTfsYIuAm49Oz77akyw2lY98ZcNnu04NrVQ9RtXH1hIu003cbGBH7RyrQoB9gFBOl7UnYM=,iv:EnrpgSS/AAFnwIn2/48WCYuVQ/8c6gmI6jxzDe1QGbQ=,tag:GjZeCuM4za2vC7QxNw83fw==,type:str]
+    pgp: []
+    encrypted_regex: ^(GITHUB_TOKEN|network_token)$
+    version: 3.8.1
