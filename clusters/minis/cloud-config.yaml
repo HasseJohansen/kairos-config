@@ -26,7 +26,7 @@ p2p:
     # network_token is the shared secret used by the nodes to co-ordinate with p2p.
     # Setting a network token implies auto.enable = true.
     # To disable, just set auto.enable = false
-    network_token: ENC[AES256_GCM,data:cPtDeuctN106JlXBMkTVkWVmIp9dSmdZWBw47+BNmPNqeumRCZE+xNh8KU0KyjPK+8EJ5wS/eJ+fmDBKfGnSTDerYPuZ9faCFi0Q10ZBb3HNTgtl9tTM+zOhYl51HzpnwehJz/G5l5leu+Q6dOMbkM9SrBRprk/dzp4//gbBxM5zrzQ9CWkuq0ENn4BaMiVpGrrSmHl2Gtb1oPQ3h0v8OIyP0otKg0QzIGMZbRsLrhYA3cEi9lH9R3icBqrBMYVRAc2DNK2hJWM4jU1KQcYpF38mqHMpNBqibFBCHUQlnbIhxEXNpFx9Cap8AQbGNW01FfPh0UFtkAyTwVCOwNA+Y10jZ04Hfk1aXLCyI3nvXlAo1Zj27kP7WN1z2BqaJD1xRIP1RTQ2NpwTv3Nav2Gq97z4lB+1nH2gkHciQW87Wqiu9CLZh3KRfoT2mJBD3RAI2qKxqlIq1FMoA+RHKbKBAbYQrA1ZNtl9S1LaZAs633c3cJUyS0JsvaiNqJlooD8S2y0qhZ+uHJ7S1ziUPSmOZaA6pUzU2qX/pThis30qILKmRfCZ+uWOsFPXboOqHmS6v8LIB/86tXaqm7CHMV51nrvm2XyYs5qESSD/egsRxKGUbxG2dIo1+ezeXoeKh6pkbxzDoqdt0y5BBc3z3nmVldYScGrLcin9+bckjg==,iv:koyF6bZohTJdkCX2m7Z/brXwCAycWvo4iHQEiPBHhik=,tag:pBLtdzCd2IzAb/kfe5p0QA==,type:str]
+    network_token: ENC[AES256_GCM,data:BzC6+flRZMaqQPHz7tHmkfOWa2pqQ/SrCqgWfvs3ZT5cnoKSKVN5RBlVSni+88dQ4AUpWfeRcu9gurQRK2AIZ/3M7e8Ux1Rhkaa9ta2U/sD17KWVllEksM0bkCX+5WVCJVr2HeioG15URoYRIoqcw9M0X4QM9Pvd3kEtqbe5sGJkFZJuDi+HonVtTGIezxVW1lEE1gVGVk7PpzcdEg9hJCoCyIwYDraVD5sy208Y3DT59q03VDyxdOIlOwC9Wko85Dsa4QF19D2Aa5V+F+OTn2cLvamsHjHR0+/4fnlGuSDxFaRvkg6AJI4kEp0Ue4l+twAWDfXF/qo1AjCNQhZ4lSc2wmrlkVHrrQN+mrwRIpV2oqoflGFQ7CSvUj1P+nRfG+GWaV1BiEJskqXBnhAeOwUeO+ol0OcXFm5Jro+ZEJj8GenEVN+uhKUMYVmFFG12EZasVrDjgOoWaVLQfJS+CaeSo8t08rm8DbJQvaXtw93wqNFjT5RBUflETHk9KS3e1t3k5jdSOWaSGRfN0u7ZFbtsxYt5Y986PMBssrjSLFRVRcUzWlP19VBhBK1B/czaPcw3KxZHg9MtaXLbeYNsXpsvFsGA5SSRjMt76dflAnqBfFJ4+1uee97qgwkFtPOnm++LAGiE2nWPBe5kD7Nyn5RYCHnFOVoLbMBzIg==,iv:3Hz0GZAPYejU6RvAPMEx7H1hd16AHIe7wc8XkXsPiLs=,tag:plJKhUY2wTxuwCG0fL0fRA==,type:str]
     # Automatic cluster deployment configuration
     auto:
         # Enables Automatic node configuration (self-coordination)
@@ -49,7 +49,7 @@ bundles:
         - run://hassejohansen/flux:latest
 flux:
     env:
-        GITHUB_TOKEN: ENC[AES256_GCM,data:t4f7lbwYXJH9vccnM2Y2CJlXs4XB0JKVihjUAoTEj1fGuumJBdhVpw==,iv:U3M/YTl6DVt1HcDBBvZb10y3KGdC4B9kEi8k0GTVtOI=,tag:0vq297iGQky7Wo5NlcCteQ==,type:str]
+        GITHUB_TOKEN: ENC[AES256_GCM,data:Drf1gUtp3fUatm+EbzNfkjsLCb7kv8/sldVzu4GxAS8X6AnznKABRQ==,iv:ZBBs6HZ6sgmsrgeSNyJ8WaEbCY5WRKFGMusYTsxt4eQ=,tag:V2l7NzJpPZ9qQUoVktrmQQ==,type:str]
     github:
         owner: HasseJohansen
         repository: fleet-infra
@@ -97,6 +97,27 @@ stages:
         - name: Mount /dev/nvme0n1 under /data
           commands:
             - mount -o rw /dev/nvme0n1 /data
+    boot:
+        - name: Add flux-system namespace manifest
+          files:
+            - path: /var/lib/rancher/k3s/server/manifests/flux-system.yaml
+              content: |
+                apiVersion: v1
+                kind: Namespace
+                metadata:
+                  name: flux-system
+        - name: Download SOPS secret
+          files:
+            - path: /var/lib/rancher/k3s/server/manifests/sops-secret.yaml
+              content: |
+                apiVersion: v1
+                data:
+                  age.agekey: <AGE key>
+                kind: Secret
+                type: Opaque
+                metadata:
+                  name: sops-age
+                  namespace: flux-system
 sops:
     kms: []
     gcp_kms: []
@@ -106,14 +127,14 @@ sops:
         - recipient: age1k4pr9evth7r8f6dajz6jee945582dklr72mklj9gpwcvnxkgc5asruclml
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSByL21rN2JtUWEyZStQTGVS
-            OUxocjhCakszSVlPQlg3aUpNSjZzV0pIaEMwCmExMEJXVGdncGR2MnQ3T0ttRjlX
-            Y2hNOE5GdURGdFVTczdZSHBnMjBRRm8KLS0tICtieUllaEp2REtCcmtZbVd2N01w
-            eTd2UENQUFRKVHQ2QTR0RE43YytuTjQKbweccOrmuyAtGDmGE1fXvZCUgYFYFck5
-            9dv3vY8Eat4OG4Est0UWal3BSEazB3OomqH0Jp+lD7wJBrDe9P4k4Q==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUVG5Ic2I0My9QNXA5WDhR
+            eUNBUUlyK0Jtc3cyamFrV2pGTk42U3FRcDI4ClVvK1o4c2lYVGFtVU4rY0hPbUh1
+            M2RPTGN5aTdFcFkyQVdNeTUxOHBmamMKLS0tIEh4MnVKbzNkZGZpOVNlNzc4ZlJS
+            SzMxQUxvL050R2ZhVVN2TEhpQXpDTUUKDCClEjJCUk8QhsRONeTc9fkl3S6pwGc7
+            XfhozaTPZV6IFFao/A5xVGaVST0v36I8t4rEYvgbnEHba8g2Y1+YTQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2024-02-18T22:03:24Z"
-    mac: ENC[AES256_GCM,data:+GAnFRHn1p4alU0zJm9FGvE6SpW3qn7Z6m2UGF6VBR8Zmy7izUlmPm61OWgEqnd1wQwJ030k7Gr/u63xR9b5erY2bGS/aTLfUWhNEUTfsYIuAm49Oz77akyw2lY98ZcNnu04NrVQ9RtXH1hIu003cbGBH7RyrQoB9gFBOl7UnYM=,iv:EnrpgSS/AAFnwIn2/48WCYuVQ/8c6gmI6jxzDe1QGbQ=,tag:GjZeCuM4za2vC7QxNw83fw==,type:str]
+    lastmodified: "2024-02-25T13:50:44Z"
+    mac: ENC[AES256_GCM,data:MUoH7gjthwnnVYLs23pUln9fFruJw5Oo+G2tTZXhAe2qbbXqWRjIgdW7k6KHyA72wgfIkTxEVpLICzNQNgCu/9LyJVYCl3wt98C5FIAby3PLLoOFXXosJZRpQHwrCj2kNSd29klnKA88a6qZbY6dyzkvOUHWg/W/YVv4fedopz0=,iv:dtdsznoHk2MMtByagbrn/SHm4SVKhQlgdLo0elEuVSg=,tag:06D0+2STdVSZzRXiJKG39Q==,type:str]
     pgp: []
     encrypted_regex: ^(GITHUB_TOKEN|network_token)$
     version: 3.8.1
