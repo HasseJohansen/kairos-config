@@ -26,7 +26,7 @@ p2p:
     # network_token is the shared secret used by the nodes to co-ordinate with p2p.
     # Setting a network token implies auto.enable = true.
     # To disable, just set auto.enable = false
-    network_token: ENC[AES256_GCM,data:BzC6+flRZMaqQPHz7tHmkfOWa2pqQ/SrCqgWfvs3ZT5cnoKSKVN5RBlVSni+88dQ4AUpWfeRcu9gurQRK2AIZ/3M7e8Ux1Rhkaa9ta2U/sD17KWVllEksM0bkCX+5WVCJVr2HeioG15URoYRIoqcw9M0X4QM9Pvd3kEtqbe5sGJkFZJuDi+HonVtTGIezxVW1lEE1gVGVk7PpzcdEg9hJCoCyIwYDraVD5sy208Y3DT59q03VDyxdOIlOwC9Wko85Dsa4QF19D2Aa5V+F+OTn2cLvamsHjHR0+/4fnlGuSDxFaRvkg6AJI4kEp0Ue4l+twAWDfXF/qo1AjCNQhZ4lSc2wmrlkVHrrQN+mrwRIpV2oqoflGFQ7CSvUj1P+nRfG+GWaV1BiEJskqXBnhAeOwUeO+ol0OcXFm5Jro+ZEJj8GenEVN+uhKUMYVmFFG12EZasVrDjgOoWaVLQfJS+CaeSo8t08rm8DbJQvaXtw93wqNFjT5RBUflETHk9KS3e1t3k5jdSOWaSGRfN0u7ZFbtsxYt5Y986PMBssrjSLFRVRcUzWlP19VBhBK1B/czaPcw3KxZHg9MtaXLbeYNsXpsvFsGA5SSRjMt76dflAnqBfFJ4+1uee97qgwkFtPOnm++LAGiE2nWPBe5kD7Nyn5RYCHnFOVoLbMBzIg==,iv:3Hz0GZAPYejU6RvAPMEx7H1hd16AHIe7wc8XkXsPiLs=,tag:plJKhUY2wTxuwCG0fL0fRA==,type:str]
+    network_token: ENC[AES256_GCM,data:I/fS/ZOdMFBzVq92G/i19MF8icbzo2qImRSFbc6NULj4vO0LBF19yL1w1JJv/W5O6RiYmbsTasTrENMy0VpdIZEwpMYb7Uq8q8/OTNuCOb/lVPezfK9mk5a4Qln22LpH5oEOdPe4gWFVxNO3WiwSpk0T5quuq00LElVm4Syg2mNEsY+0zBAyPvlH3yL/DcxLIjCDh3wW9fooVrYYBmGdVSdkY13HjtM63ZdKwmuDjQklQSolVPzgIfBoxjmeRKJvdRE51DM3K4IJrX62tiYU7+ohGRhxG+bDy22jPRs9WYXVsT3p0m0e1NKwmCF7qzWf4YgjwuusyP49AaSd2/4Umjhcb1Y6g+0VAhXzsSk3hW+sTYQvONQ3H4ylVC9Hg1xHYb0Ds1CejzC0Ls2WqcjqD+mXX1KLE/dQforvy8ZLZIzxflCpgYIGzXBEG6K9I3pi8Gs+PqCAI2z13JPZHl4Eulp/lrK/TAmnClQqwaIdq3uL2UVmRkU6pIKiSsezktezZlgyT7ZQNYRsskAVbBIpeI9pem7lnZNO/gDd+uimxxt3yt+fbWoGEeHGOVOyxaIxMe9/ly1Nmq/9w1n9GSHkGARsessQ7ZnbRRswPgxc/VFdRnSY2jwhgHHAT7Aq9GIohjLDvEpog3kno8+S4h5jn2hLp451SXKJjnZvfQ==,iv:rZw4/sIvXnXu4Y++DFmNOhqYbEWtelMEoghTRXMb5VA=,tag:Q0OLAoWfz2hY2VPveYV6uw==,type:str]
     # Automatic cluster deployment configuration
     auto:
         # Enables Automatic node configuration (self-coordination)
@@ -49,7 +49,7 @@ bundles:
         - run://hassejohansen/flux:latest
 flux:
     env:
-        GITHUB_TOKEN: ENC[AES256_GCM,data:Drf1gUtp3fUatm+EbzNfkjsLCb7kv8/sldVzu4GxAS8X6AnznKABRQ==,iv:ZBBs6HZ6sgmsrgeSNyJ8WaEbCY5WRKFGMusYTsxt4eQ=,tag:V2l7NzJpPZ9qQUoVktrmQQ==,type:str]
+        GITHUB_TOKEN: ENC[AES256_GCM,data:r3AXr6nR7QsgPr6lAeGc3DS3GAicGKjcz2Alg1vtqk7d7E6O7s/uSw==,iv:diV1Vl+uUDHxAbsb51kvn5p+sDAK4cxqOVDzr9fuh6U=,tag:rxY4y9VduBCLy8H2mCm53Q==,type:str]
     github:
         owner: HasseJohansen
         repository: fleet-infra
@@ -80,6 +80,9 @@ stages:
         - name: Format /dev/nvme0n1
           commands:
             - mkfs.ext4 -F /dev/nvme0n1
+        - name: Setup mdns resolving
+          commands:
+            - echo "MulticastDNS=yes" >> /etc/systemd/resolved.conf
     # Creates the data dir after reset inside the final system chroot, just in case it's not there
     after-reset-chroot:
         - !!merge <<:
@@ -127,14 +130,14 @@ sops:
         - recipient: age1k4pr9evth7r8f6dajz6jee945582dklr72mklj9gpwcvnxkgc5asruclml
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUVG5Ic2I0My9QNXA5WDhR
-            eUNBUUlyK0Jtc3cyamFrV2pGTk42U3FRcDI4ClVvK1o4c2lYVGFtVU4rY0hPbUh1
-            M2RPTGN5aTdFcFkyQVdNeTUxOHBmamMKLS0tIEh4MnVKbzNkZGZpOVNlNzc4ZlJS
-            SzMxQUxvL050R2ZhVVN2TEhpQXpDTUUKDCClEjJCUk8QhsRONeTc9fkl3S6pwGc7
-            XfhozaTPZV6IFFao/A5xVGaVST0v36I8t4rEYvgbnEHba8g2Y1+YTQ==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBmV2FIWFlsbXRjbGorS2xj
+            MVVOWXFkdUZrTXhiVFBrc3BhcS93STV0R2gwCkJMazE2ZDl0K0tjZ1ZtQ2FWYUYr
+            eHh3S3JDR3d4NFdQRzQzUys5WUVyOUkKLS0tIG00WUo5MmV5N2YvZzE4QXczUFMr
+            RnpYSHdWMUhMQi9BMXh2T2FsN0tKaW8KkYgkf7LXjIzmDZjpNUhTa7StAXZCRsrI
+            XJDY+mOu53qlN7pufjOKeYs5CNKWAAHLJ/4+rEQQMjBAHZzX/qKZCA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2024-02-25T13:50:44Z"
-    mac: ENC[AES256_GCM,data:MUoH7gjthwnnVYLs23pUln9fFruJw5Oo+G2tTZXhAe2qbbXqWRjIgdW7k6KHyA72wgfIkTxEVpLICzNQNgCu/9LyJVYCl3wt98C5FIAby3PLLoOFXXosJZRpQHwrCj2kNSd29klnKA88a6qZbY6dyzkvOUHWg/W/YVv4fedopz0=,iv:dtdsznoHk2MMtByagbrn/SHm4SVKhQlgdLo0elEuVSg=,tag:06D0+2STdVSZzRXiJKG39Q==,type:str]
+    lastmodified: "2024-03-05T12:34:29Z"
+    mac: ENC[AES256_GCM,data:GOUhMJo2gJrryy4/2AsXzn66fOR1kGsc9nvZU9rxb90x06dR5dZLV0TgtS19f9Ljd54vAxMxwG2jCD5mue7U0P4axMyhj70DGtnnZ9BhjrU769q15FdeHAIuHcx3or+oz4Pbzd2yMIORY+L0fNT5Iml6hxfYSLZRD6unMZo3USs=,iv:U9rM8IEhTu9gM18prIaQQcqK/ZGFGkzpISggQjxwjW0=,tag:PaiNmmpVZUzu0r0un0+G/g==,type:str]
     pgp: []
     encrypted_regex: ^(GITHUB_TOKEN|network_token)$
     version: 3.8.1
