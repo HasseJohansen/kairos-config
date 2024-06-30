@@ -3,6 +3,8 @@ install:
     device: /dev/sda
     auto: true
     poweroff: true
+    grub_options:
+        extra_cmdline: selinux=0
 hostname: minis-{{ trunc 4 .MachineID }}
 users:
     - name: kairos
@@ -26,7 +28,7 @@ p2p:
     # network_token is the shared secret used by the nodes to co-ordinate with p2p.
     # Setting a network token implies auto.enable = true.
     # To disable, just set auto.enable = false
-    network_token: ENC[AES256_GCM,data:g15UoM88enBoAeFkDPwNZWeaAJ6AkW9eWh3OjzRZcDuWiuU6NvGEeBOs0hTbwGnlG6YN01I+XrP9xGBZtpEAvFg2YRpWqvzK/MTPbyHxNVUKJKW4pNQjl82No5mEDZfhV7EqGRWosZlS1RscFyEbm3jM+V1F+vaKtiyDCA6zB9LBkftSHLrYF7WYEXC79B2GP/8wdHoewt+phhoJrGPH1JYIkdCUjb1xnajkSzT/nf3JuetJNcNDAkQN+iJ7yoZBdiOUjP45qrLH740UOAwNqsTyxPaNnJ6vak781XYwLUaG52A7lT2I6XasEe4ga5cS6p2+W8Fq/B2RE8q8b07tPn4pSUWfHzJj1oGEtxfWDnO5xeN78Ci1LmMYb5ewCxQbRvKcF4I5scTVEs1KEfm6LyQXMYFTjjFfntiMR2pqOE2+oes8V5etk3DOdMdgdDb2ANP7u57U5RIBKDypxnPEsH24J3KMTOQvpQJZoaOZMkKlVrlxt2bK5vPLlEtsl4hXQNFhDvy10Rz9p39rV8KMSg3YCOWOinU/TX2WYMAoNbm49c0mx2v2klrLm4ryOBx2NuNeV9YLFD2BoUuQeZjEQULAk3XYCfXxaqIx1svZuyzWh6N5q7zRLbVUCz32/LBpayKk/nSzzwntVeR3nrjFdIEg+u959q3RPsT10Q==,iv:TN4PnrnsV/U1nmRPjc+4e0cUhX3wyLQk5Z4HPJ1CmH8=,tag:Mc5hqCMlUNHuu/452kAvyQ==,type:str]
+    network_token: ENC[AES256_GCM,data:lCYSjoFAONyLdl24A6wOMEBkKTNtZuZsMpNj9SZ8qQA3B4irn0q+iUAk3wP+UTVSLB82kn+GWhAGnfAVdCIqR0o1xt0tU4GI982WdYWTYiCzzt66llvJ3Nej2DGH6IfV0MK2pTtO98EHnXJ0ao/gwh7f+P3S7Hc9ETqiMDbb8kHSNVxnrTjv94Zjt1Gg1UH4WRKqLXqjmyZWSUKTK5/nP63Rkov006OLossoyMicvtes9YYG1Udl8VQl5xhG3fPaQkbzyojyeiRaA/+y1RYqtBEw99Lr97GXd9IT8JiHVtpUPH2hq8O6ghplngNbyZZk1NSsaxELhwetHmvPxtI4RgQHWu7/4hO0kT5fbTLnRCSxxrJluMbxO03uemOVN8pCL9YjvWhd0dZB3KaBZ3OPU19UnYRZrQp700Hz5ei+Pz66xZS+2YtiDElUNoZ4h41jHY6wd3o4MDKvdsOxt9HfOmo2giWjT2zXTJuRFauHAztctAFKB/jKecuep/km5+NrycM/6VK0IPg7LfSGf5IjGpZgNSsP6BbKJGOJnPAVc1kw4P1LdrqPvtVjxN1o0b5m5n0/U1rus1c7B+19pu/pxNd4EzOdDY8YEvSdvgX9vor5xIaSJHafYSiNZtqxjKKV5GQ+axGIdThtfqXtt8wB/uvZ5hEaDM1LH3vUgA==,iv:DdCsrOhT3J9Nv2OW0HSKLEyWyEAdisigYUsk6aTzpQw=,tag:RwR/MMlIIJIWpsZ4XUtUAA==,type:str]
     # Automatic cluster deployment configuration
     auto:
         # Enables Automatic node configuration (self-coordination)
@@ -43,19 +45,20 @@ p2p:
             # Number of HA additional master nodes.
             # A master node is always required for creating the cluster and is implied.
             # The setting below adds 2 additional master nodes, for a total of 3.
-            master_nodes: 1
+            master_nodes: 2
 bundles:
     - targets:
-        - run://hassejohansen/flux:latest
+        - run://hassejohansen/flux:2.3.0
 flux:
     env:
-        GITHUB_TOKEN: ENC[AES256_GCM,data:wb2Vk8/XzpezmF4NdMJqrdruop8Np8AqNJxsRwJvQ76bDbFJibyRUg==,iv:9S34+0vv1LeCEWjbISc64VSWDtrXunJBiUuI17QMjms=,tag:PfB5FpVIgYHVfqkimELtMA==,type:str]
+        GITHUB_TOKEN: ENC[AES256_GCM,data:x60U+I5y34oBoZOsLPxuYRgDMZMx/plwZvFV1QfOR3bK2zOb4ElF5Q==,iv:hZ0hbfixiohZ9CYrV3ARd9wv8OWj3oiZ55BpCZfXuO8=,tag:B956LEIk54ZDw4Nhi//vIw==,type:str]
     github:
         owner: HasseJohansen
         repository: fleet-infra
         path: clusters/minis
         components-extra: image-reflector-controller,image-automation-controller
         network-policy: "false"
+        read-write-key: "true"
 stages:
     after-install-chroot:
         - files:
@@ -116,7 +119,7 @@ stages:
               content: |
                 apiVersion: v1
                 data:
-                  age.agekey: <AGE key>
+                  age.agekey: <PLACEHOLDER>
                 kind: Secret
                 type: Opaque
                 metadata:
@@ -131,14 +134,14 @@ sops:
         - recipient: age1k4pr9evth7r8f6dajz6jee945582dklr72mklj9gpwcvnxkgc5asruclml
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBhRGUyZmpWdVFhSVRnOC9F
-            MkNaYzVoclYvclFrWGFIUFdDcEhvVHdrYXlzCnlwamdOVlk5WnZ0LzNDVTRGNnlF
-            dzF0aXJzZGxqeVp0VXQxUUFERFRuczgKLS0tIHBURWhvenNGMjhkTU9UdmplaXdV
-            RXFKZnRac3ZkZHRNRGlmVTlWbjlEWEEK87cnG+szRt7PAuNMkVyhpAdpOVUwwNpU
-            /b+8/jbeGoiO6EF+WVJ9bVeLrevI2E3p6JOVzQJ15nTFTwR/zS3lvQ==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBTL1hnUWwrSXNIMStIWmV1
+            VGgvRWtoTTdkLzQwTmdKL2tUVDJkRWVCTFJ3CjJvZ1g1WkdwWWlsalZOdnp0dkcv
+            UUZCbkxYZnVxUFF6WmkvcmhPR0RrTG8KLS0tIDZsZGlXQ3pnQXNhbld1NE9lc2xs
+            QTEwVUtidDdtdk9FRW9MRFFVOXNYcUEKEpbtVruHGf0DT08KKDu3dU6MbHC1jK0r
+            j72XZ7ScRClV+po6H4AEN8dSzZb6rrNOB8hH7xxJzbIhVLbpHd2RhQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2024-03-05T12:53:46Z"
-    mac: ENC[AES256_GCM,data:hkUkX1T0U4Pd3Jbx9jdKgiJulDtD9jhSLNo0RefpFGxhqRLs+z5bRuL5qjSyWjsLj5Dk7rSNTQ7rZsxk0ZTfAYlty37v2ulbAU4WkPxr/On5kVIDYGdgWfJChxGSuLKm0NOeF3cd5sWL5L4NKJP6dwWqXHuYIa37yYh6i9RAlN0=,iv:dJF+gjpZNCHUHEqEdRkRzwhh2dW2eSOPOKQq+cOywMs=,tag:sQc/2AH+KbOlp4e9gWMPww==,type:str]
+    lastmodified: "2024-06-30T10:46:14Z"
+    mac: ENC[AES256_GCM,data:JqceRBBtW/+4dVikmY6q31mZ6id44BBNFVTpCCr7j3FlvS+50Pm+XsgXLvv5kMw6rufBIePA3yIkKiOXAoJNPYuXY12GMYCgtSF55xieusEY9QrZD+IwMIkFoxRDMe9auFmgJ2xZgSHwT6tcrOFsW8AnILxYo5a3D29MkgXpdEs=,iv:bCtWm0BPNK4Rh0eoNFV+qA19t5obuNxKDJUkAgW8su0=,tag:ykHXkwMO9W16f1ivFyBoPA==,type:str]
     pgp: []
     encrypted_regex: ^(GITHUB_TOKEN|network_token)$
     version: 3.8.1
