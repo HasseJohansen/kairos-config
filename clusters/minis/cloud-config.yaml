@@ -17,6 +17,7 @@ k3s:
     args:
         - --disable=traefik,servicelb
         - --prefer-bundled-bin
+        - --data-dir=/data/k3s
 kubevip:
     eip: 192.168.8.8
 p2p:
@@ -107,9 +108,10 @@ stages:
           commands:
             - mount -o rw /dev/nvme0n1 /data
     boot:
+        # k3s data-dir is /data/k3s (NVMe); auto-deploy manifests live under it
         - name: Add flux-system namespace manifest
           files:
-            - path: /var/lib/rancher/k3s/server/manifests/flux-system.yaml
+            - path: /data/k3s/server/manifests/flux-system.yaml
               content: |
                 apiVersion: v1
                 kind: Namespace
@@ -117,7 +119,7 @@ stages:
                   name: flux-system
         - name: Download SOPS secret
           files:
-            - path: /var/lib/rancher/k3s/server/manifests/sops-secret.yaml
+            - path: /data/k3s/server/manifests/sops-secret.yaml
               content: |
                 apiVersion: v1
                 data:
@@ -127,6 +129,22 @@ stages:
                 metadata:
                   name: sops-age
                   namespace: flux-system
+        # multipathd must never claim Longhorn iSCSI/SPDK devices (roon-config mount-blocker bug)
+        - name: Write multipath blacklist
+          files:
+            - path: /etc/multipath.conf
+              owner: 0
+              group: 0
+              permissions: 420
+              content: |
+                defaults {
+                    user_friendly_names yes
+                }
+                blacklist {
+                    property "ID_MODEL=VIRTUAL-DISK"
+                    protocol "scsi:iscsi"
+                    wwid "iqn.*"
+                }
 sops:
     kms: []
     gcp_kms: []
