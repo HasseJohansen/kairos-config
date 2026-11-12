@@ -55,7 +55,7 @@ bundles:
         - run://hassejohansen/flux:2.4.0
 flux:
     env:
-        GITHUB_TOKEN: ENC[AES256_GCM,data:IXG9kvDpQWYxtP2r0zw6aoDbANuQYi/C9udznEDCMHrGhR9Blp8SPA==,iv:uvi45Ric34KDJ4YIghIDDlDvCkN/dHW0sxyQ7hpcvXo=,tag:FOc49rCluV798I/6oxF4bA==,type:str]
+        GITHUB_TOKEN: ENC[AES256_GCM,data:N3LlGKjRK/n5Mb7hrs7agurVNixXLTE0iPj0W5j8pIfAaEO2/Z8Znb3fhkrxAfCdC90XpuVeRhyVKsuqZEwztnA3PVOK0nvyJ2jPwlz4H+Qyki+kw0YxR9fhDxeN,iv:T1cpc8a/vtIfx3VDSqD2T6jYBF21snJ8fRKYlciFsRg=,tag:+5T1U/RGuD7K6yyYMX75nQ==,type:str]
     github:
         owner: HasseJohansen
         repository: fleet-infra
@@ -157,6 +157,6 @@ sops:
             -----END AGE ENCRYPTED FILE-----
           recipient: age1k4pr9evth7r8f6dajz6jee945582dklr72mklj9gpwcvnxkgc5asruclml
     encrypted_regex: ^(GITHUB_TOKEN|network_token)$
-    lastmodified: "2026-11-12T21:11:29Z"
-    mac: ENC[AES256_GCM,data:dasksx8bHT5wXX2TptcBaDtZ/gOLkNH/YsBbRKQoHoavuMDlbD7mQpk3a7/iVOIK2Z8JzZdlsgUqJ7fZ1PtE8Ma8OouXHwYqu8sPQWFYZj4WyK6/jhlNp8jTNA7N3vqag9nbyk6LDgH9Lb9tJUK5wpauYUoELmm1KYHneddOVhs=,iv:7ARHIi5/YUtn74BceAYTRStg3d2b5zUyX/PP6PLGsPk=,tag:BUyisk7tbRgs2SCZLXkNFQ==,type:str]
+    lastmodified: "2026-11-12T21:20:48Z"
+    mac: ENC[AES256_GCM,data:64upZT26nwF9r7dpQjFZkLCNeixfLNsk/ijLu2eGlAOqpfkGu94vUlWehApeETBIWdQwQ7CGVS7L7imMBmvaghUJ6AVvbk6boqV6pf9k+TjVKBfj3TWM3OBz1QenAZCkH3p2uJbVv1F6ntN2ZpEZh5bAYFz9x5QTzVjvcTSWONg=,iv:LUA4XtuQXZWywES8wlswSR9xj9Fk1/5yOeGYhP6jDQ0=,tag:I6FPGKShwMDhKzjK1kulqQ==,type:str]
     version: 3.13.3
