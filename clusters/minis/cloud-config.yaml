@@ -32,7 +32,7 @@ p2p:
     # network_token is the shared secret used by the nodes to co-ordinate with p2p.
     # Setting a network token implies auto.enable = true.
     # To disable, just set auto.enable = false
-    network_token: ENC[AES256_GCM,data:21FKbIrprwq8myRTQtKEMLZMOQkasWBBilVOKMgZLnLrfZwSa9DuvvMykSnDvgEU4jrNPGh9pjzI2zJetkDX9ueHhG49pcTCJv190x7fzIljtElcm70C9vPVwUNpHo+WAeFyO/hk3lq4z7l+YeAzRMJfD9ob1cyN1qjn0dGPZB2RESSaqdc/symLnJ1Sgmz2AX+Ih+oMAQMPxa7OnPdCZAM6JTYYc2eyheGtgsAMvNO7M4/XEiqE84jduEPBwpXAzRTngcS1mTFbe0MKu/xuY6Sq25bxKOdC7JdoZsli5YjO0+yrqtzz+3odHFR4XVEocDjtqf76LF8EMKuxjtbm3VzUiWrByHmmPqoCq7b/hkwqNCRMzNft9Svblron1DSCQrDuu6Pe8EAzpjO/YWpuBfIZ1hoRIZVDZImVPotXO7VhT3ESDN9tDLNTlwhDjlMAOvSoYXcXjYQO1EOHKLTon5Y0Z8Q3pfyMF/iduTPuFsXpsMhUs23xNeq0os0hLSIG5K7sTnEOeR5MPYtC4fjGvO7n4TZoOU/xrMxf9HGNn0VTERt0c4p8McLx+r0witUVyZWdDUrLzFCAta+XVix1VBoM8BxfnArEPVly3BB12J/b8BMIdXrortCZdyKgQla1IYQyAlV1azp9ZpQCo/AF6gbKfOmBOoBLZlsVMA==,iv:9keQCBoHJmAcHFTgB1vGl4OBokQfaj5HbN8GxHlYKEw=,tag:42QZWNkdd54gU8GdAJlxXg==,type:str]
+    network_token: ENC[AES256_GCM,data:MGLE+d43MH5e2phsb+Ef+37ZEsKe06oGgQHZCWhQzAQ3tS5D8DwViJcOpArLKZRrFrqdzO1aVt099H0S84pGr2jGXbK/LKoV2ei3qkb1OPXKzbTcsRIOcCRQvFjA/lQo4pAOy4gYUUE0ez4RqhL9yYqjAJGuLWrSmu/IXfmtVGuDhDWwMMAe2MvoUrK3+mVEnTca20p5aUygXXI35fWSICzj7EhUySk4BicdeBnT4hZRVmuLeLGYmq8lzlwFUveeOh/2hNgwh5k9uDIKWxYoOwUxltQfwalGkVR6fZ9ZBXH58Ei0gdGefsZWvVQMpTYNZ3HAw0bieE0y5hVKmR8TSY1fhqQAvdbY2NlQnrQLiJnW3a4n/g1AIN0+iY/40i5mKfdsPN2jq/H0tt4VO9XrnvyxVktYxw0MKUA92aTSz/nvr+h3BDzFnTkl48umOSF0l5aVElYbGzAQPq0btrP52mJECYCCmz3vspmc+Y2jqQjs9SvjSdjecOdQPxcfpHhKFcvSjI2bgILXRcqvfwHdcRZjFYhZg/9yl9B2BJQeTkKGoMiDe9//hHh7Dr/XD+76bcENT+y2aVTDjieMHL8/57ScmFfuYf3DkNJ9VJcneokH00Cu8WqyNloeP3CYjTvy0Y9uAyBiYbsVlU7B+eY0UQGm9exSoPlroOvdsw==,iv:02Fg6eo24KQ108oHw47+H/6JvOIi2YYDFQ+q7ZjEHEc=,tag:WnwlwLXXt4U0tx5Q1lHYWg==,type:str]
     # Automatic cluster deployment configuration
     auto:
         # Enables Automatic node configuration (self-coordination)
@@ -55,7 +55,7 @@ bundles:
         - run://hassejohansen/flux:2.4.0
 flux:
     env:
-        GITHUB_TOKEN: ENC[AES256_GCM,data:c2/B/5vJqf+lsj/f7hqCddyEfiY/KrRqpep8lyHscgCpys97T9wi9w==,iv:PPaeeyNZfICbLVD05LxgRmYGiQxUbQUmdg66S3IomTY=,tag:TZbsCoIoi8wlNewSBLzPkw==,type:str]
+        GITHUB_TOKEN: ENC[AES256_GCM,data:IXG9kvDpQWYxtP2r0zw6aoDbANuQYi/C9udznEDCMHrGhR9Blp8SPA==,iv:uvi45Ric34KDJ4YIghIDDlDvCkN/dHW0sxyQ7hpcvXo=,tag:FOc49rCluV798I/6oxF4bA==,type:str]
     github:
         owner: HasseJohansen
         repository: fleet-infra
@@ -146,22 +146,17 @@ stages:
                     wwid "iqn.*"
                 }
 sops:
-    kms: []
-    gcp_kms: []
-    azure_kv: []
-    hc_vault: []
     age:
-        - recipient: age1k4pr9evth7r8f6dajz6jee945582dklr72mklj9gpwcvnxkgc5asruclml
-          enc: |
+        - enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB1MC9ZVVN6bERWbm1RV1VM
-            MS9vZSs3WHExUlJvOXhEV0RhdTJvMnRzNmxZCjlobnAzK1R0R0lRR1B0YTJnaGpP
-            RzVSYWxmNW8yNENHUzdWeU9DcDQ2UEEKLS0tIC9HWnEyRS9hV3RSV2Z3OGkvdzZ1
-            TFBUdytZMHVmZ1lTZURiZGUyKy92S3MKJ3qS+FWUdNXlbTiXLXhCEdgbihkjgOv2
-            u18h4mT2drfL7pyBlnqanWXgu1JvbACW3cdFPKsMtAsnMcDIM68wEA==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBLN0JpTDlpOTZKQnZOUTVJ
+            Y0VsYk9IZEZuUnM4TzdCMmljWmtNaW05V1g4CmhMVFpnbkVIRU5kQlZ4ZFdsSFFE
+            cFZFZVQveDc0bzdlbzlSTmpsVEh1MGcKLS0tIGZpYVZpVVZiQStwMmFocUxWMDQy
+            aElLQTZRRzFLN1F5V1Vrcndac1EzMHcKYgOxmpZJ2SBUG0XA/5CNgJ+axucB6wO8
+            2AW2KOwkcPPuMFylLEeryAZfTXTSErrCvyi7CrwaSYIhBqQYvDRykg==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2024-10-04T09:41:13Z"
-    mac: ENC[AES256_GCM,data:fy3mziHq9bNq+S5okvbS5qgljBoveE4nNBlPsbeMTQk1Mk85gpmoBKEyaN6WTMWGEVp20dIO83LiEtga+VOfR3xUxpJSKSfeJOTY7KvR2jEXAeCypvZxcY2gx/OHFhkZyd3wErHTFuPaFunFY6rw+nX1aH5zHnNX6OYDi/JByLI=,iv:npEYqSBRjrtGgbe6m0tvjHL1TgrvTD4JuKIh3rbQXwc=,tag:Tu40Fs4WPi3dpS+irgQSBA==,type:str]
-    pgp: []
+          recipient: age1k4pr9evth7r8f6dajz6jee945582dklr72mklj9gpwcvnxkgc5asruclml
     encrypted_regex: ^(GITHUB_TOKEN|network_token)$
-    version: 3.9.1
+    lastmodified: "2026-11-12T21:11:29Z"
+    mac: ENC[AES256_GCM,data:dasksx8bHT5wXX2TptcBaDtZ/gOLkNH/YsBbRKQoHoavuMDlbD7mQpk3a7/iVOIK2Z8JzZdlsgUqJ7fZ1PtE8Ma8OouXHwYqu8sPQWFYZj4WyK6/jhlNp8jTNA7N3vqag9nbyk6LDgH9Lb9tJUK5wpauYUoELmm1KYHneddOVhs=,iv:7ARHIi5/YUtn74BceAYTRStg3d2b5zUyX/PP6PLGsPk=,tag:BUyisk7tbRgs2SCZLXkNFQ==,type:str]
+    version: 3.13.3
