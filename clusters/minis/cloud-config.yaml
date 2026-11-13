@@ -32,7 +32,7 @@ p2p:
     # network_token is the shared secret used by the nodes to co-ordinate with p2p.
     # Setting a network token implies auto.enable = true.
     # To disable, just set auto.enable = false
-    network_token: ENC[AES256_GCM,data:MGLE+d43MH5e2phsb+Ef+37ZEsKe06oGgQHZCWhQzAQ3tS5D8DwViJcOpArLKZRrFrqdzO1aVt099H0S84pGr2jGXbK/LKoV2ei3qkb1OPXKzbTcsRIOcCRQvFjA/lQo4pAOy4gYUUE0ez4RqhL9yYqjAJGuLWrSmu/IXfmtVGuDhDWwMMAe2MvoUrK3+mVEnTca20p5aUygXXI35fWSICzj7EhUySk4BicdeBnT4hZRVmuLeLGYmq8lzlwFUveeOh/2hNgwh5k9uDIKWxYoOwUxltQfwalGkVR6fZ9ZBXH58Ei0gdGefsZWvVQMpTYNZ3HAw0bieE0y5hVKmR8TSY1fhqQAvdbY2NlQnrQLiJnW3a4n/g1AIN0+iY/40i5mKfdsPN2jq/H0tt4VO9XrnvyxVktYxw0MKUA92aTSz/nvr+h3BDzFnTkl48umOSF0l5aVElYbGzAQPq0btrP52mJECYCCmz3vspmc+Y2jqQjs9SvjSdjecOdQPxcfpHhKFcvSjI2bgILXRcqvfwHdcRZjFYhZg/9yl9B2BJQeTkKGoMiDe9//hHh7Dr/XD+76bcENT+y2aVTDjieMHL8/57ScmFfuYf3DkNJ9VJcneokH00Cu8WqyNloeP3CYjTvy0Y9uAyBiYbsVlU7B+eY0UQGm9exSoPlroOvdsw==,iv:02Fg6eo24KQ108oHw47+H/6JvOIi2YYDFQ+q7ZjEHEc=,tag:WnwlwLXXt4U0tx5Q1lHYWg==,type:str]
+    network_token: ENC[AES256_GCM,data:Zh2F++p34iwFXxyaYMB/6JmXL/nDHAGiAkXgIWjajKdcQo6DRF9SMtD4o3QsTDh/ir8cqB1HUBxLFfY4CzRI7cPHHI00oNmZvJGX0qwF6s5UXAww3wSFE7/Pz2XISiGA99pzp5FAKGqhliFKyOkAi461v/GkxmgvAhHoUaZANHgkCTBiQVHmgcRDFaY8RZ1lb5swnw5cWrGut16w1jK68BUwleISwzR8hJkJGcPI3Cq2DhZSx6NZ2sxrkUYijDvUGb/6CgeZSDajCPixtCH3MZi2idWCyIxbBhe/PNGYD1FBRay93ZCrUBPevzfMsxQ9h8HSo7wymYzGsW7FBhd9lfaoTPoYfuIhqcMatK4A/u+xqhBD0NfMo60X65P/+sPg8JZURdUyxIcoma9YQZAGMO0JequFRcDnhPKsoBqyqlurahBtQu2W55PC4kCUasD++IfFBYWkM0d/rWtS0IqbErkOAwyV0mJhIPBaXvj1IPvcfQjSVpEjlT8tgiYO8QBOYf82gnIuyLbSl/HCPOxPNtrrKQ4eSmk1nqb6nkwy9k6iR02x5hyElyeZuge6hDFEllTqXKEV/eQfgjXQ4fg5HJ7nAAJMBOjHKbaPvjRREeRzMDGbdrdQUFThCQRLYkUPg4hvlk53icPFAEzLCOwE92NA8fh1qzCgpgCAVA==,iv:g0MuId2a2cZI1iyej3rhL2kszeeumeDD2+JSNLrO644=,tag:6beDaAmWjed2jcWQ8Nj3kg==,type:str]
     # Automatic cluster deployment configuration
     auto:
         # Enables Automatic node configuration (self-coordination)
@@ -55,7 +55,7 @@ bundles:
         - run://hassejohansen/flux:2.4.0
 flux:
     env:
-        GITHUB_TOKEN: ENC[AES256_GCM,data:N3LlGKjRK/n5Mb7hrs7agurVNixXLTE0iPj0W5j8pIfAaEO2/Z8Znb3fhkrxAfCdC90XpuVeRhyVKsuqZEwztnA3PVOK0nvyJ2jPwlz4H+Qyki+kw0YxR9fhDxeN,iv:T1cpc8a/vtIfx3VDSqD2T6jYBF21snJ8fRKYlciFsRg=,tag:+5T1U/RGuD7K6yyYMX75nQ==,type:str]
+        GITHUB_TOKEN: ENC[AES256_GCM,data:55CMoNXRNIPj5Llwfglchr4ckTv2nu7PhGCKIln8yJclKnhMPLWEZqO0mPhQ4CPdpKg19f/6GPkbBkGKiJSDR3Q06hwUMRnJzvJNo3iXQGR9Rn20gVQ6S7Jl9zNA,iv:IjFo5saAd4MkCspcVbPorwsONKV3MssnZ6H0wI5/aSE=,tag:p40KP8E6fQ4rFXFGemEELA==,type:str]
     github:
         owner: HasseJohansen
         repository: fleet-infra
@@ -106,7 +106,7 @@ stages:
         # Mounts the disk under the /data dir during initramfs on each boot, with RW. Extra options can be added to the mount here
         - name: Mount /dev/nvme0n1 under /data
           commands:
-            - mount -o rw /dev/nvme0n1 /data
+            - mount -o rw LABEL=K3SDATA /data
     boot:
         # k3s data-dir is /data/k3s (NVMe); auto-deploy manifests live under it
         - name: Add flux-system namespace manifest
@@ -149,14 +149,14 @@ sops:
     age:
         - enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBLN0JpTDlpOTZKQnZOUTVJ
-            Y0VsYk9IZEZuUnM4TzdCMmljWmtNaW05V1g4CmhMVFpnbkVIRU5kQlZ4ZFdsSFFE
-            cFZFZVQveDc0bzdlbzlSTmpsVEh1MGcKLS0tIGZpYVZpVVZiQStwMmFocUxWMDQy
-            aElLQTZRRzFLN1F5V1Vrcndac1EzMHcKYgOxmpZJ2SBUG0XA/5CNgJ+axucB6wO8
-            2AW2KOwkcPPuMFylLEeryAZfTXTSErrCvyi7CrwaSYIhBqQYvDRykg==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBYQTBPM3VZV3ptR3A4OE93
+            aCtmR0hhLzY1UkorM2NHSjh3L2szdk5Udmc0CjZNaXhDWmlSY0ttTkJmVFBTekdu
+            cUl5eDE0UmxaWWlteVY3NGVTdURPQzQKLS0tIDhKTDhidkdnL1ZNOUt2eGlYRmtZ
+            RjlnYWhUMHgvV3hRZ0dxcCtvYmxLc1EKLwsJMcxsjAL6iFqKsMuJ9GZSG0QiBGBx
+            j8SnR/FQGv0riUs+Jf/OT7cX1c7szmNQf/595gAGHDjMOPotLc1KGQ==
             -----END AGE ENCRYPTED FILE-----
           recipient: age1k4pr9evth7r8f6dajz6jee945582dklr72mklj9gpwcvnxkgc5asruclml
     encrypted_regex: ^(GITHUB_TOKEN|network_token)$
-    lastmodified: "2026-11-12T21:20:48Z"
-    mac: ENC[AES256_GCM,data:64upZT26nwF9r7dpQjFZkLCNeixfLNsk/ijLu2eGlAOqpfkGu94vUlWehApeETBIWdQwQ7CGVS7L7imMBmvaghUJ6AVvbk6boqV6pf9k+TjVKBfj3TWM3OBz1QenAZCkH3p2uJbVv1F6ntN2ZpEZh5bAYFz9x5QTzVjvcTSWONg=,iv:LUA4XtuQXZWywES8wlswSR9xj9Fk1/5yOeGYhP6jDQ0=,tag:I6FPGKShwMDhKzjK1kulqQ==,type:str]
+    lastmodified: "2026-11-13T15:08:35Z"
+    mac: ENC[AES256_GCM,data:8VHoSg/zHfJ9y7gSNQ/rzvPqUmme1wJHUsi2/dIULIAww/EJwbp7fayjlxp+zckgLybW1fgJ+5qdp0WaFcriYJGH/9pJXc8M1nvRQW5qYoSeao1uH96jXS0ekeQiCU8HeSSEJlkQ5OQdW34Ug0/dOBQ09+4LF3nPOKOhnx7Ug7k=,iv:OeEIVbdE/+4u9iMW+bDDCxYPuaVQkekZO3fxFVyibZs=,tag:mNc4vbTOHGzTTJ/5KFJC+Q==,type:str]
     version: 3.13.3
