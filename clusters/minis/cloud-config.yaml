@@ -32,7 +32,7 @@ p2p:
     # network_token is the shared secret used by the nodes to co-ordinate with p2p.
     # Setting a network token implies auto.enable = true.
     # To disable, just set auto.enable = false
-    network_token: ENC[AES256_GCM,data:Zh2F++p34iwFXxyaYMB/6JmXL/nDHAGiAkXgIWjajKdcQo6DRF9SMtD4o3QsTDh/ir8cqB1HUBxLFfY4CzRI7cPHHI00oNmZvJGX0qwF6s5UXAww3wSFE7/Pz2XISiGA99pzp5FAKGqhliFKyOkAi461v/GkxmgvAhHoUaZANHgkCTBiQVHmgcRDFaY8RZ1lb5swnw5cWrGut16w1jK68BUwleISwzR8hJkJGcPI3Cq2DhZSx6NZ2sxrkUYijDvUGb/6CgeZSDajCPixtCH3MZi2idWCyIxbBhe/PNGYD1FBRay93ZCrUBPevzfMsxQ9h8HSo7wymYzGsW7FBhd9lfaoTPoYfuIhqcMatK4A/u+xqhBD0NfMo60X65P/+sPg8JZURdUyxIcoma9YQZAGMO0JequFRcDnhPKsoBqyqlurahBtQu2W55PC4kCUasD++IfFBYWkM0d/rWtS0IqbErkOAwyV0mJhIPBaXvj1IPvcfQjSVpEjlT8tgiYO8QBOYf82gnIuyLbSl/HCPOxPNtrrKQ4eSmk1nqb6nkwy9k6iR02x5hyElyeZuge6hDFEllTqXKEV/eQfgjXQ4fg5HJ7nAAJMBOjHKbaPvjRREeRzMDGbdrdQUFThCQRLYkUPg4hvlk53icPFAEzLCOwE92NA8fh1qzCgpgCAVA==,iv:g0MuId2a2cZI1iyej3rhL2kszeeumeDD2+JSNLrO644=,tag:6beDaAmWjed2jcWQ8Nj3kg==,type:str]
+    network_token: ENC[AES256_GCM,data:okNlDj9n5hCM3PcWIkTCcXMHieef4Khu4h+3hDsq0DBMfj5OQ/1Shb2leeLAEOB6yZNsEgPUxyL6z/eBm1IvRM3oTIGd2SwK7Hm9kgxrVlr4WEGRJWKMOzL+F0iqs5lI/KNYv0V+Fr39vCsm9DFoJPvlH5Lh7Xzt2fJEFRxUsA3BhBqeAyQKTsXUjFVT1G7k41IGQKURFKc1Ksw2b0R2zIJwtUV+VEc3XXpi/T8xUT340t4AmpR8Y5BxzX079gg+Q56tXLUZ7iCNFRQg7VUXY4YqieNWJ7BwnVJr0TRPTnXgWVyJuLdjY6jm0e7NyWEJ13O7sLieI8Ar4o7tIKl+OjutGGqOgZRZuxwyzYkOFBBos+XIHyh53Px1JrMlVrFt3xs+1ef/vtzbbMDbV2cOzp2l3FTfZO7fFgWXcSKqNppR/9h14rk5mdNFR7KX94/UiCJGn0r6q2hI+XpNys+Ee9XutzH3ewlCCFqOoJFkwpVq02/1SRuocIPiL1ZAhYeIywndk8DnbO5q7Hnl2W9KWU8V7NY1a7rnLdnWFRNxs9qWMduLnJCgDsghyC4b/rO4GNJFuI62eBJxg9OJWP/5bRSfCvLlQCZy+8UE3U/6MURD5dSHX7dUAsdda1xaNmejk3STidbDlqyt9o1vtWF/MN6DGKJgsbE+uQ7lag==,iv:TFJOibhIgT8s0cCBG6x6jvZEiw0kG79rfSlmZlnlDz4=,tag:67ubJUHbSCD0yeGcnHbbdA==,type:str]
     # Automatic cluster deployment configuration
     auto:
         # Enables Automatic node configuration (self-coordination)
@@ -55,7 +55,7 @@ bundles:
         - run://hassejohansen/flux:2.4.0
 flux:
     env:
-        GITHUB_TOKEN: ENC[AES256_GCM,data:55CMoNXRNIPj5Llwfglchr4ckTv2nu7PhGCKIln8yJclKnhMPLWEZqO0mPhQ4CPdpKg19f/6GPkbBkGKiJSDR3Q06hwUMRnJzvJNo3iXQGR9Rn20gVQ6S7Jl9zNA,iv:IjFo5saAd4MkCspcVbPorwsONKV3MssnZ6H0wI5/aSE=,tag:p40KP8E6fQ4rFXFGemEELA==,type:str]
+        GITHUB_TOKEN: ENC[AES256_GCM,data:e8eJJNQSxdeQfJhiczvh8cffvmV398WD4BFOAygHOaZplJ+HgoD6SceuL7QzugrQPa/FGGuShDkpXISvL5eJ7comohqUyfL3vRsi/xvLtpE/q7+yESfjvYuvw/6I,iv:+1WodD+hloalo29q3SKsUYiYYJ9rYEijVv1UAZduPiQ=,tag:Vfc2hWDJjENSKOlWCpVkmw==,type:str]
     github:
         owner: HasseJohansen
         repository: fleet-infra
@@ -145,18 +145,25 @@ stages:
                     protocol "scsi:iscsi"
                     wwid "iqn.*"
                 }
+        # Hadron ships sshd.service as the canonical unit; a stale Ubuntu-era alias
+        # /etc/systemd/system/sshd.service -> ssh.service breaks sshd resolution
+        - name: Guard sshd unit
+          commands:
+            - if [ -f /usr/lib/systemd/system/sshd.service ] && [ -L /etc/systemd/system/sshd.service ]; then rm -f /etc/systemd/system/sshd.service; fi
+            - if [ -f /usr/lib/systemd/system/sshd.service ] && [ -d /etc/systemd/system/ssh.service.requires ]; then rm -rf /etc/systemd/system/ssh.service.requires; fi
+            - if [ -f /usr/lib/systemd/system/sshd.service ]; then systemctl enable sshd.service >/dev/null 2>&1 || true; fi
 sops:
     age:
         - enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBYQTBPM3VZV3ptR3A4OE93
-            aCtmR0hhLzY1UkorM2NHSjh3L2szdk5Udmc0CjZNaXhDWmlSY0ttTkJmVFBTekdu
-            cUl5eDE0UmxaWWlteVY3NGVTdURPQzQKLS0tIDhKTDhidkdnL1ZNOUt2eGlYRmtZ
-            RjlnYWhUMHgvV3hRZ0dxcCtvYmxLc1EKLwsJMcxsjAL6iFqKsMuJ9GZSG0QiBGBx
-            j8SnR/FQGv0riUs+Jf/OT7cX1c7szmNQf/595gAGHDjMOPotLc1KGQ==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBDQTllR3lPMndqL3pQYWUy
+            UW5UUEtwNFpHVUZaVDRuT2lwZzFNcUNVcGwwCkdld215d09YNUZlS1VFcktJN3dw
+            WE12Q1hCNm83dUI3VGIzakZuOXl5a0kKLS0tIFJDS0lMdThHSVI5c0I0Yk9pZXdp
+            WG81QTZ3dFJNaENtRVFJRXJDTTBYM0EKLxmSRmdOIKdDBfB7ksJq8uEI6ot+AVNC
+            4KsJRcAt8nCl/JA7T6xU4BmQTpUb2+84PfyyCgBk9AOuwZPxjiJ3Ag==
             -----END AGE ENCRYPTED FILE-----
           recipient: age1k4pr9evth7r8f6dajz6jee945582dklr72mklj9gpwcvnxkgc5asruclml
     encrypted_regex: ^(GITHUB_TOKEN|network_token)$
-    lastmodified: "2026-11-13T15:08:35Z"
-    mac: ENC[AES256_GCM,data:8VHoSg/zHfJ9y7gSNQ/rzvPqUmme1wJHUsi2/dIULIAww/EJwbp7fayjlxp+zckgLybW1fgJ+5qdp0WaFcriYJGH/9pJXc8M1nvRQW5qYoSeao1uH96jXS0ekeQiCU8HeSSEJlkQ5OQdW34Ug0/dOBQ09+4LF3nPOKOhnx7Ug7k=,iv:OeEIVbdE/+4u9iMW+bDDCxYPuaVQkekZO3fxFVyibZs=,tag:mNc4vbTOHGzTTJ/5KFJC+Q==,type:str]
+    lastmodified: "2026-11-14T10:15:55Z"
+    mac: ENC[AES256_GCM,data:boKXn2ABDw2mbp7OGrCFXlSmNzzS1W/6kmLueAweOVJAs2nvo2QPUIp1SFmIvmRJ49ICH4jvyf9NzznOLaJYQmFH42UhyKAN8jOzZcDLibHLXEkoQjuguAUH/EGb94NO8473ubxySzsziw9L9Zh0G7FlyFKEH1fTVIEL4QHNBio=,iv:1Z+h2STAcEjVP6T0p4nilnD2461XxBNfq6LKiMq2LwU=,tag:fMVv362HRPOHvAV8QWTSXA==,type:str]
     version: 3.13.3

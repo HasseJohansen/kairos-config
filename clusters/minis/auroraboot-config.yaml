@@ -1,9 +1,6 @@
 listen_addr: :8081
 state_dir: "/storage"
-# artifact_version: v2.5.0-k3sv1.29.0+k3s1
-# release_version: v2.5.0
-# flavor: ubuntu
-# flavor_release: 23.10
-# variant: standard
-# repository: kairos-io/kairos
-container_image: quay.io/kairos/ubuntu:23.10-standard-amd64-generic-master
+# Pinned to the channel the fleet currently runs: Hadron v4.4.0, k3s v1.37.1+k3s1.
+# Bump alongside kairos-channel.yaml in fleet-infra when the fleet upgrades.
+release_version: v4.4.0
+container_image: quay.io/kairos/hadron:v0.6.3-standard-amd64-generic-v4.4.0-k3s-v1.37.1-k3s1
